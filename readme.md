@@ -89,11 +89,4 @@ protected $middlewareGroups = [
 
 ---
 
-## 🗺️ Roadmap
-- [x] **v2.0**: Automatic UI Injection & Laravel 12 Support.
-- [ ] **v2.1**: Slack/Discord Notifications for Impersonation events.
-- [ ] **v2.2**: "Record & Replay" - Log user actions during impersonation.
-
----
-
 Created & Maintained by **Skywalker-Labs**. Built for Developers, Trusted by Admins.
