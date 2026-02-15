@@ -19,22 +19,25 @@
         "security",
         "skywalker-labs"
     ],
+    "homepage": "https://github.com/skywalker-labs/impersonate",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Skywalker Labs",
+            "email": "Skywalkerlknw@gmail.com",
+            "homepage": "https://github.com/skywalker-labs",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^7.2 | ^8.0",
         "laravel/framework": "^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0 | ^11.0 | ^12.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5 | ^8.0 | ^9.0 | ^10.0 | ^11.0 |^12.0",
         "mockery/mockery": "^1.3.3",
-        "orchestra/testbench": "^4.0 | ^5.0 | ^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0"
+        "orchestra/testbench": "^4.0 | ^5.0 | ^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0",
+        "phpunit/phpunit": "^7.5 | ^8.0 | ^9.0 | ^10.0 | ^11.0 | ^12.0"
     },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Skywalker Labs",
-            "email": "Skywalkerlknw@gmail.com"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Skywalker\\Impersonate\\": "src/"
@@ -55,6 +58,9 @@
             ]
         }
     },
-    "minimum-stability": "dev",
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
