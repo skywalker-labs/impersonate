@@ -3,10 +3,10 @@
 # 🎭 Laravel Impersonate: Pro Stealth
 ### *Switch Users with Elite Precision and Zero-Config UI Injection*
 
-[![Latest Version](https://img.shields.io/badge/version-1.0.0-gold.svg?style=for-the-badge)](https://packagist.org/packages/skywalker-labs/laravel-impersonate)
+[![Latest Version](https://img.shields.io/badge/version-1.0.0-gold.svg?style=for-the-badge)](https://packagist.org/packages/skywalker-labs/impersonate)
 [![Laravel Version](https://img.shields.io/badge/Laravel-12.x-red.svg?style=for-the-badge)](https://laravel.com)
 [![PHP Version](https://img.shields.io/badge/PHP-8.4+-777bb4.svg?style=for-the-badge)](https://php.net)
-[![UI Status](https://img.shields.io/badge/UI-Automatic_Injection-green.svg?style=for-the-badge)](https://github.com/skywalker-labs/laravel-impersonate)
+[![UI Status](https://img.shields.io/badge/UI-Automatic_Injection-green.svg?style=for-the-badge)](https://github.com/skywalker-labs/impersonate)
 
 ---
 
