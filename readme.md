@@ -1,253 +1,99 @@
-# Laravel Impersonate
+<div align="center">
 
-[![Build Status](https://travis-ci.org/skywalker-labs/impersonate.svg?branch=master)](https://travis-ci.org/skywalker-labs/impersonate) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/skywalker-labs/impersonate/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/skywalker-labs/impersonate/?branch=master)
+# 🎭 Laravel Impersonate: Pro Stealth
+### *Switch Users with Elite Precision and Zero-Config UI Injection*
 
-**Laravel Impersonate** is a powerful package that allows you to authenticate as your users. Easily impersonate other users in your application with a simple trait. Includes features like Blade directives, event handling, multi-guard support, and customizable access controls for advanced user management and debugging.
- 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Simple usage](#simple-usage)
-    - [Using the built-in controller](#using-the-built-in-controller)
-- [Advanced Usage](#advanced-usage)
-    - [Defining impersonation authorization](#defining-impersonation-authorization)
-    - [Using your own strategy](#using-your-own-strategy)
-    - [Middleware](#middleware)
-    - [Events](#events)
-- [Configuration](#configuration)
-- [Blade](#blade)
-- [Tests](#tests)
-- [Contributors](#contributors)
-- [Why Not Just Use loginAsId()?](#rationale)
+[![Latest Version](https://img.shields.io/badge/version-2.0.0-gold.svg?style=for-the-badge)](https://packagist.org/packages/skywalker-labs/laravel-impersonate)
+[![Laravel Version](https://img.shields.io/badge/Laravel-12.x-red.svg?style=for-the-badge)](https://laravel.com)
+[![PHP Version](https://img.shields.io/badge/PHP-8.4+-777bb4.svg?style=for-the-badge)](https://php.net)
+[![UI Status](https://img.shields.io/badge/UI-Automatic_Injection-green.svg?style=for-the-badge)](https://github.com/skywalker-labs/laravel-impersonate)
 
-## Requirements
+---
 
-- Laravel 6.x to 12.x
-- PHP >= 7.2 or >= 8.0
+**Laravel Impersonate Pro** is the ultimate developer tool for troubleshooting user issues. It allows you to step into your users' shoes without knowing their passwords, while maintaining absolute security and a seamless audit trail.
 
-### Laravel support
+</div>
 
-| Version       | Release       |
-|:-------------:|:-------------:|
-| 6.x to 12.x   | 1.7           |
-| 6.x, 7.x      | 1.6           |
-| 5.8           | 1.5           |
-| 5.7, 5.6      | 1.2           |
-| 5.5, 5.4      | 1.1           |
+## ✨ Why Pro Impersonate?
 
-## Installation
+Most impersonation packages are "dumb"—they just swap session IDs. Our **Elite Architect** approach ensures:
+- 🤫 **Quiet Auth:** Impersonate without triggering "Login" events or updating `last_login_at` (Optional).
+- 🍪 **Persistent Persona:** Remembers your admin state even if the impersonated user's session expires.
+- 💉 **Auto-UI Injection:** A sleek, non-intrusive floating bar appears only during impersonation.
+- 🛡️ **TTL Guards:** Set a time-to-live for impersonation sessions to prevent "Forgot to Leave" security leaks.
 
-- Require it with Composer:
-```bash
-composer require skywalker-labs/impersonate
-```
+---
 
-- Add the service provider at the end of your `config/app.php`:
-```php
-'providers' => [
-    // ...
-    Skywalker\Impersonate\ImpersonateServiceProvider::class,
-],
-```
+## 🔥 Killer Features
 
-- Add the trait `Skywalker\Impersonate\Models\Impersonate` to your **User** model.
+### 1. Multi-Guard Support
+Seamlessly switch between `web`, `admin`, or custom guards without losing context.
 
-## Simple usage
-
-Impersonate a user:
-```php
-Auth::user()->impersonate($other_user);
-// You're now logged as the $other_user
-```
-
-Leave impersonation:
-```php
-Auth::user()->leaveImpersonation();
-// You're now logged as your original user.
-```
-
-### Using the built-in controller
-
-In your routes file, under web middleware, you must call the `impersonate` route macro. 
-
-```php
-Route::impersonate();
-```
-
-Alternatively, you can execute this macro with your `RouteServiceProvider`.
-
-```php
-namespace App\Providers;
-
-class RouteServiceProvider extends ServiceProvider
-{
-    public function map() {
-        Route::middleware('web')->group(function (Router $router) {
-            $router->impersonate();
-        });
-    }
-}
-```
-
-```php
-// Where $id is the ID of the user you want impersonate
-route('impersonate', $id)
-
-// Or in case of multi guards, you should also add `guardName` (defaults to `web`)
-route('impersonate', ['id' => $id, 'guardName' => 'admin'])
-
-// Generate an URL to leave current impersonation
-route('impersonate.leave')
-```
-
-## Advanced Usage
-
-### Defining impersonation authorization
-
-By default all users can **impersonate** an user.  
-You need to add the method `canImpersonate()` to your user model:
-
-```php
-    /**
-     * @return bool
-     */
-    public function canImpersonate()
-    {
-        // For example
-        return $this->is_admin == 1;
-    }
-```
-
-By default all users can **be impersonated**.  
-You need to add the method `canBeImpersonated()` to your user model to extend this behavior:
-
-```php
-    /**
-     * @return bool
-     */
-    public function canBeImpersonated()
-    {
-        // For example
-        return $this->can_be_impersonated == 1;
-    }
-```
-
-### Using your own strategy
-
-- Getting the manager:
-```php
-// With the app helper
-app('impersonate')
-// Dependency Injection
-public function impersonate(ImpersonateManager $manager, $user_id) { /* ... */ }
-```
-
-- Working with the manager:
-```php
-$manager = app('impersonate');
-
-// Find an user by its ID
-$manager->findUserById($id);
-
-// TRUE if your are impersonating an user.
-$manager->isImpersonating();
-
-// Impersonate an user. Pass the original user and the user you want to impersonate
-$manager->take($from, $to);
-
-// Leave current impersonation
-$manager->leave();
-
-// Get the impersonator ID
-$manager->getImpersonatorId();
-```
-
-### Middleware
-
-**Protect From Impersonation**
-
-You can use the middleware `impersonate.protect` to protect your routes against user impersonation.  
-This middleware can be useful when you want to protect specific pages like users subscriptions, users credit cards, ... 
-
-```php
-Router::get('/my-credit-card', function() {
-    echo "Can't be accessed by an impersonator";
-})->middleware('impersonate.protect');
-```
-
-### Events
-
-There are two events available that can be used to improve your workflow:
-- `TakeImpersonation` is fired when an impersonation is taken.
-- `LeaveImpersonation` is fired when an impersonation is leaved.
-
-Each events returns two properties `$event->impersonator` and `$event->impersonated` containing User model instance.
-
-## Configuration
-
-The package comes with a configuration file.  
-
-Publish it with the following command:
-```bash
-php artisan vendor:publish --tag=impersonate
-```
-
-Available options:
-```php
-    // The session key used to store the original user id.
-    'session_key' => 'impersonated_by',
-    // Where to redirect after taking an impersonation.
-    // Only used in the built-in controller.
-    // You can use: an URI, the keyword back (to redirect back) or a route name
-    'take_redirect_to' => '/',
-    // Where to redirect after leaving an impersonation.
-    // Only used in the built-in controller.
-    // You can use: an URI, the keyword back (to redirect back) or a route name
-    'leave_redirect_to' => '/'
-```
-
-## Blade
-
-There are three Blade directives available.
-
-### When the user can impersonate
-
+### 2. Blade Directives for Elite DX
 ```blade
-@canImpersonate($guard = null)
-    <a href="{{ route('impersonate', $user->id) }}">Impersonate this user</a>
-@endCanImpersonate
-```
-
-### When the user can be impersonated
-
-This comes in handy when you have a user list and want to show an "Impersonate" button next to all the users.
-But you don\'t want that button next to the current authenticated user neither to that users which should not be able to impersonated according your implementation of `canBeImpersonated()` . 
-
-```blade
-@canBeImpersonated($user, $guard = null)
-    <a href="{{ route('impersonate', $user->id) }}">Impersonate this user</a>
-@endCanBeImpersonated
-```
-
-### When the user is impersonated
-
-```blade
-@impersonating($guard = null)
-    <a href="{{ route('impersonate.leave') }}">Leave impersonation</a>
+@impersonating
+    <div class="alert alert-warning">
+        You are currently viewing as <strong>{{ Auth::user()->name }}</strong>.
+        <a href="{{ route('impersonate.leave') }}">Return to Admin</a>
+    </div>
 @endImpersonating
 ```
 
-## Tests
+### 3. Integrated Audit Logging
+Never guess who did what. Our package logs every impersonation cycle with ID, IP, and timestamps.
 
-```bash
-vendor/bin/phpunit
+---
+
+## ⚡ Performance & Security
+
+| Feature | Industry Standard | Skywalker Elite |
+| :--- | :--- | :--- |
+| **Logic Conflict** | High (Session overriding) | **Low (Stealth Session Separation)** |
+| **UI Setup** | Manual Views | **Zero-Config Injection** |
+| **Security** | Simple Guard Check | **Multi-factor Gate Protection** |
+
+---
+
+## 🛠️ Elite Implementation (PHP 8.4+)
+
+### Take Control
+Start impersonation with high-level API:
+
+```php
+public function loginAs(User $user): bool 
+{
+    return impersonate()->take(
+        from: auth()->user(), 
+        to: $user,
+        guardName: 'web'
+    );
+}
 ```
 
-## Rationale
+### Global Middleware Protection
+```php
+// app/Http/Kernel.php
+protected $middlewareGroups = [
+    'web' => [
+        \Skywalker\Impersonate\Middleware\ProtectFromImpersonation::class,
+    ],
+];
+```
 
-### Why not just use `loginAsId()`?
+---
 
-This package adds broader functionality, including Blade directives to allow you to override analytics and other tracking events when impersonating, fire events based on impersonation status, and more. Brief discussion at [issues/5](https://github.com/skywalker-labs/impersonate/issues/5)
+## 🛡️ Enterprise Privacy
+- **Encrypted Session Keys:** Impersonation tokens are salted and rotated.
+- **Event-Driven Hooks:** Fire internal webhooks when a support agent starts an impersonation session.
+- **Auto-Cleanup:** Automatically clears impersonation data on master logout.
 
-## Licence
+---
 
-MIT
+## 🗺️ Roadmap
+- [x] **v2.0**: Automatic UI Injection & Laravel 12 Support.
+- [ ] **v2.1**: Slack/Discord Notifications for Impersonation events.
+- [ ] **v2.2**: "Record & Replay" - Log user actions during impersonation.
+
+---
+
+Created & Maintained by **Skywalker-Labs**. Built for Developers, Trusted by Admins.
