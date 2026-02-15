@@ -2,6 +2,7 @@
     "name": "skywalker-labs/impersonate",
     "description": "A powerful Laravel package to authenticate as your users. Easily impersonate other users in your application with a simple trait. Includes features like Blade directives, event handling, multi-guard support, and customizable access controls for advanced user management and debugging.",
     "type": "library",
+    "license": "MIT",
     "keywords": [
         "laravel",
         "package",
@@ -20,13 +21,28 @@
         "skywalker-labs"
     ],
     "homepage": "https://github.com/skywalker-labs/impersonate",
-    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/skywalker-labs/impersonate/issues",
+        "source": "https://github.com/skywalker-labs/impersonate"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/ermradulsharma"
+        }
+    ],
     "authors": [
         {
-            "name": "Skywalker Labs",
-            "email": "Skywalkerlknw@gmail.com",
-            "homepage": "https://github.com/skywalker-labs",
+            "name": "Skywalker Labs Team",
+            "email": "skywalkerlknw@gmail.com",
+            "homepage": "https://skywalker-labs.com/",
             "role": "Developer"
+        },
+        {
+            "name": "Mradul Sharma",
+            "email": "skywalkerlknw@gmail.com",
+            "homepage": "https://mradulsharma.vercel.app/",
+            "role": "Lead Developer"
         }
     ],
     "require": {
