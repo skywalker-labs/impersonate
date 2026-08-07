@@ -39,6 +39,9 @@ class ImpersonateUITest extends TestCase
         $response = $this->get('/test-ui');
 
         $response->assertStatus(200);
+        $response->assertSee('<script>', false);
+        $response->assertSee('inertia:navigate', false);
+        $response->assertSee('livewire:navigated', false);
         $response->assertSee('You are currently impersonating');
         $response->assertSee($user->name);
         $response->assertSee('Leave Impersonation');

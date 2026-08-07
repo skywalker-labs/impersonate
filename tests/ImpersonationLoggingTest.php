@@ -42,4 +42,28 @@ class ImpersonationLoggingTest extends TestCase
             'impersonated_id' => $user->id,
         ]);
     }
+
+    #[Test]
+    public function it_can_use_custom_log_model()
+    {
+        Config::set('laravel-impersonate.logging', true);
+        Config::set('laravel-impersonate.log_model', CustomLogModel::class);
+
+        $admin = User::create(['name' => 'Admin2', 'email' => 'admin2@test.com', 'password' => 'password', 'is_admin' => 1]);
+        $user = User::create(['name' => 'User2', 'email' => 'user2@test.com', 'password' => 'password', 'can_be_impersonated' => 1]);
+
+        $this->actingAs($admin);
+        $this->get('/impersonate/take/' . $user->id . '/web');
+
+        // We assert on the same table since the custom model will use the same table for this test
+        $this->assertDatabaseHas('impersonation_logs', [
+            'impersonator_id' => $admin->id,
+            'impersonated_id' => $user->id,
+        ]);
+    }
+}
+
+class CustomLogModel extends ImpersonationLog
+{
+    // Mock custom model
 }

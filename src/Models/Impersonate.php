@@ -14,7 +14,7 @@ trait Impersonate
      */
     public function canImpersonate(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,7 +24,7 @@ trait Impersonate
      */
     public function canBeImpersonated(): bool
     {
-        return true;
+        return false;
     }
 
     /**

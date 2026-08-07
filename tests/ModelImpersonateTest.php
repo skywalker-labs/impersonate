@@ -69,4 +69,15 @@ class ModelImpersonateTest extends TestCase
         $this->assertFalse($user->isImpersonated());
         $this->assertNotEquals($this->app['auth']->user()->getAuthIdentifier(), 2);
     }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_has_secure_defaults_for_traits()
+    {
+        $mock = new class {
+            use \Skywalker\Impersonate\Models\Impersonate;
+        };
+
+        $this->assertFalse($mock->canImpersonate());
+        $this->assertFalse($mock->canBeImpersonated());
+    }
 }

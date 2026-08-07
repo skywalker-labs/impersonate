@@ -43,6 +43,7 @@ return [
      */
     'logging' => false,
     'log_table' => 'impersonation_logs',
+    'log_model' => \Skywalker\Impersonate\Models\ImpersonationLog::class,
 
     /**
      * Injected UI Bar

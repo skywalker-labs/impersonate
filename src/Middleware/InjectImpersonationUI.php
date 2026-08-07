@@ -81,10 +81,33 @@ class InjectImpersonationUI
         $style = "position: fixed; {$position}: 0; left: 0; right: 0; background-color: {$colors['background']}; color: {$colors['text']}; padding: 10px; text-align: center; z-index: 99999; font-family: sans-serif; box-shadow: 0 0 10px rgba(0,0,0,0.1);";
 
         return <<<HTML
-<div style="{$style}">
-    You are currently impersonating <strong>{$name}</strong>.
-    <a href="{$leaveUrl}" style="color: inherit; text-decoration: underline; margin-left: 10px;">Leave Impersonation</a>
-</div>
+<script>
+    (function() {
+        var id = 'laravel-impersonate-ui-bar';
+        var style = "{$style}";
+        var html = 'You are currently impersonating <strong>{$name}</strong>. <a href="{$leaveUrl}" style="color: inherit; text-decoration: underline; margin-left: 10px;">Leave Impersonation</a>';
+
+        function inject() {
+            if (document.getElementById(id)) return;
+            var el = document.createElement('div');
+            el.id = id;
+            el.style.cssText = style;
+            el.innerHTML = html;
+            if (document.body) document.body.appendChild(el);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', inject);
+        } else {
+            inject();
+        }
+
+        // SPA event listeners (persists on document)
+        document.addEventListener('inertia:navigate', inject);
+        document.addEventListener('turbo:load', inject);
+        document.addEventListener('livewire:navigated', inject);
+    })();
+</script>
 HTML;
     }
 }

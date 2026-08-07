@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Skywalker\Impersonate\Events\LeaveImpersonation;
 use Skywalker\Impersonate\Events\TakeImpersonation;
 use Skywalker\Impersonate\Exceptions\InvalidUserProvider;
@@ -141,12 +142,13 @@ class ImpersonateManager
 
         if ($this->app['config']->get('laravel-impersonate.logging')) {
             try {
-                ImpersonationLog::create([
+                $logModel = $this->app['config']->get('laravel-impersonate.log_model', ImpersonationLog::class);
+                $logModel::create([
                     'impersonator_id' => $from->getAuthIdentifier(),
                     'impersonated_id' => $to->getAuthIdentifier(),
                 ]);
             } catch (\Exception $e) {
-                // Logging failed, but impersonation was successful.
+                Log::error('Impersonation logging failed: ' . $e->getMessage());
             }
         }
 
