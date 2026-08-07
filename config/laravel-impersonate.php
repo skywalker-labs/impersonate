@@ -18,6 +18,13 @@ return [
     'session_guard_using' => 'impersonator_guard_using',
 
     /**
+     * The URI path prefix for the impersonation routes.
+     *
+     * @type string
+     */
+    'route_path' => 'impersonate',
+
+    /**
      * The default impersonator guard used.
      */
     'default_impersonator_guard' => 'web',

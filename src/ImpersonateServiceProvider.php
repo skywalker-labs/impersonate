@@ -55,6 +55,17 @@ class ImpersonateServiceProvider extends ServiceProvider
     {
         $this->publishConfig();
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'impersonate');
+
+        $this->publishes([
+            __DIR__.'/../lang' => function_exists('lang_path') ? lang_path('vendor/impersonate') : resource_path('lang/vendor/impersonate'),
+        ], 'impersonate-lang');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Skywalker\Impersonate\Console\ClearImpersonationLogsCommand::class,
+            ]);
+        }
 
         // We want to remove data from storage on real login and logout
         Event::listen(Login::class, function (Login $event) {
@@ -112,12 +123,14 @@ class ImpersonateServiceProvider extends ServiceProvider
         $router = $this->app['router'];
 
         $router->macro('impersonate', function () use ($router) {
+            $prefix = config('laravel-impersonate.route_path', 'impersonate');
+
             $router->get(
-                '/impersonate/take/{id}/{guardName?}',
+                "/{$prefix}/take/{id}/{guardName?}",
                 '\Skywalker\Impersonate\Controllers\ImpersonateController@take'
             )->name('impersonate');
             $router->get(
-                '/impersonate/leave',
+                "/{$prefix}/leave",
                 '\Skywalker\Impersonate\Controllers\ImpersonateController@leave'
             )->name('impersonate.leave');
         });
